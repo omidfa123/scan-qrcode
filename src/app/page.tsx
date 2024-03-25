@@ -19,7 +19,7 @@ const ScanQrCodePage = () => {
     error: Html5QrcodeError
   ): void => {
     // handle decoded results here
-    alert(errorMessage);
+    // alert(errorMessage);
   };
   return (
     <div className="bg-white min-h-screen flex items-center justify-center px-4">
