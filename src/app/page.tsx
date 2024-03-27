@@ -22,7 +22,7 @@ const ScanQrCodePage = () => {
     // alert(errorMessage);
   };
   return (
-    <div className="bg-white min-h-screen flex items-center justify-center px-4">
+    <div className="bg-black min-h-screen flex items-center justify-center px-4 max-w-[609px] mx-auto">
       <Html5QrcodePlugin
         fps={10}
         qrbox={328}
@@ -31,6 +31,7 @@ const ScanQrCodePage = () => {
         qrCodeErrorCallback={onNewScanError}
         verbose={true}
         useBarCodeDetectorIfSupported
+        rememberLastUsedCamera={false}
       />
     </div>
   );

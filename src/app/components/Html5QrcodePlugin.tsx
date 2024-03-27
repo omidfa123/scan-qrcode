@@ -1,4 +1,5 @@
 import {
+  Html5Qrcode,
   Html5QrcodeScanner,
   QrcodeErrorCallback,
   QrcodeSuccessCallback,
@@ -37,31 +38,40 @@ interface Html5QrcodePluginType extends Partial<Html5QrcodeScannerConfig> {
 
 const Html5QrcodePlugin = (props: Html5QrcodePluginType) => {
   useEffect(() => {
-    // when component mounts
+    let html5QrCode: null | Html5Qrcode = null;
     const config = createConfig(props);
-    // Suceess callback is required.
     if (!props.qrCodeSuccessCallback) {
       throw "qrCodeSuccessCallback is required callback.";
     }
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      qrcodeRegionId,
-      config,
-      props.verbose
-    );
-    html5QrcodeScanner.render(
-      props.qrCodeSuccessCallback,
-      props.qrCodeErrorCallback
-    );
-
-    // cleanup function when component will unmount
-    return () => {
-      html5QrcodeScanner.clear().catch((error) => {
-        console.error("Failed to clear html5QrcodeScanner. ", error);
+    Html5Qrcode.getCameras()
+      .then((devices) => {
+        if (devices && devices.length) {
+          html5QrCode = new Html5Qrcode(qrcodeRegionId);
+          html5QrCode
+            .start(
+              { facingMode: "environment" },
+              config,
+              props.qrCodeSuccessCallback,
+              props.qrCodeErrorCallback
+            )
+            .catch((err) => {
+              alert(err);
+            });
+        }
+      })
+      .catch((err) => {
+        alert("دسترسی رد شد");
+        console.log(err);
       });
+
+    return () => {
+      if (html5QrCode) {
+        html5QrCode.clear();
+      }
     };
   }, []);
 
-  return <div id={qrcodeRegionId} className="h-full w-full text-black " />;
+  return <div id={qrcodeRegionId} className="h-full w-full" />;
 };
 
 export default Html5QrcodePlugin;
